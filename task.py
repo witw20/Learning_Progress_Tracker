@@ -46,7 +46,7 @@ def print_menu() -> None:
             print("Unknown command!")
 
 
-def check_fname(name) -> bool:
+def check_fname(name: str) -> bool:
     if re.match("^[A-Za-z]+[\-']?[A-Za-z]+$", name) and len(name) > 1\
             and name[0] not in ("'", "-")\
             and name[-1] not in ("'", "-"):
@@ -54,7 +54,7 @@ def check_fname(name) -> bool:
     else:
         return False
 
-def check_lname(name):
+def check_lname(name: str) -> bool:
     if re.match("^[A-Za-z]+(?:([ \'-]?[A-Za-z]+)?)*$", name)\
             and len(name) > 1\
             and name[0] not in ("'", "-")\
@@ -63,20 +63,20 @@ def check_lname(name):
     else:
         return False
 
-def check_email(email):
+def check_email(email: str) -> bool:
     if re.match("^[\w\.-]+@[\w\.-]+\.\w+$", email):
         return True
     else:
         return False
 
-def check_point(point_list):
+def check_point(point_list: list) -> bool:
     for point in point_list:
         if point.isdigit() == False:
             return False
             break
     return True
 
-def add_student():
+def add_student() -> None:
     print("Enter student credentials or 'back' to return:")
     while True:
         student_info = input()
@@ -121,7 +121,7 @@ def add_student():
                     print("The student has been added.")
                     student_num += 1
 
-def add_point():
+def add_point() -> None:
     print("Enter an id and points or 'back' to return:")
     while True:
         student_point = input()
@@ -142,7 +142,7 @@ def add_point():
             student_dict[student_id]["flask_score"] += int(student_point.split()[4])
             print("Points updated")
 
-def find_student():
+def find_student() -> None:
     print("Enter an id or 'back' to return:")
     while True:
         student_id_info = input()
@@ -157,7 +157,7 @@ def find_student():
                   f'Databases={student_dict[student_id_info]["datebase_score"]};', \
                   f'Flask={student_dict[student_id_info]["flask_score"]}', sep=" ")
 
-def statistics():
+def statistics() -> None:
     print("Type the name of a course to see details or 'back' to quit:")
     course_list = ["Python", "DSA", "Databases", "Flask"]
     # popular
