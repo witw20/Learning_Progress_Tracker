@@ -1,5 +1,5 @@
 # Learning Progress Tractor of Hyperskill
-import re
+import re, operator
 def main():
     print_menu()
 
@@ -37,14 +37,11 @@ def print_menu() -> None:
         elif choice.strip() == "statistics":
             statistics()
 
-
-
         elif choice.strip() == "exit":
             print("Bye!")
             break
         else:
             print("Unknown command!")
-
 
 def check_fname(name: str) -> bool:
     if re.match("^[A-Za-z]+[\-']?[A-Za-z]+$", name) and len(name) > 1\
@@ -113,10 +110,10 @@ def add_student() -> None:
                     student_dict[id_str] = {"first_name": first_name,
                                             "last_name": last_name,
                                             "email": email,
-                                            "python_score": 0,
-                                            "DSA_score": 0,
-                                            "datebase_score": 0,
-                                            "flask_score": 0}
+                                            "Python": 0,
+                                            "DSA": 0,
+                                            "Database": 0,
+                                            "Flask": 0}
                     email_set.add(email)
                     print("The student has been added.")
                     student_num += 1
@@ -136,10 +133,10 @@ def add_point() -> None:
             continue
         else:
             student_id = student_point.split()[0]
-            student_dict[student_id]["python_score"] += int(student_point.split()[1])
-            student_dict[student_id]["DSA_score"] += int(student_point.split()[2])
-            student_dict[student_id]["datebase_score"] += int(student_point.split()[3])
-            student_dict[student_id]["flask_score"] += int(student_point.split()[4])
+            student_dict[student_id]["Python"] += int(student_point.split()[1])
+            student_dict[student_id]["DSA"] += int(student_point.split()[2])
+            student_dict[student_id]["Database"] += int(student_point.split()[3])
+            student_dict[student_id]["Flask"] += int(student_point.split()[4])
             print("Points updated")
 
 def find_student() -> None:
@@ -152,48 +149,49 @@ def find_student() -> None:
             print(f"No student is found for id={student_id_info}")
         else:
             print(student_id_info, "points:", \
-                  f'Python={student_dict[student_id_info]["python_score"]};', \
-                  f'DSA={student_dict[student_id_info]["DSA_score"]};', \
-                  f'Databases={student_dict[student_id_info]["datebase_score"]};', \
-                  f'Flask={student_dict[student_id_info]["flask_score"]}', sep=" ")
+                  f'Python={student_dict[student_id_info]["Python"]};', \
+                  f'DSA={student_dict[student_id_info]["DSA"]};', \
+                  f'Databases={student_dict[student_id_info]["Database"]};', \
+                  f'Flask={student_dict[student_id_info]["Flask"]}', sep=" ")
 
 def statistics() -> None:
     print("Type the name of a course to see details or 'back' to quit:")
     course_name = ["Python", "DSA", "Databases", "Flask"]
+    try:
+        python_list = [student_dict[x]["Python"] for x in student_dict]
+        dsa_list = [student_dict[x]["DSA"] for x in student_dict]
+        db_list = [student_dict[x]["Database"] for x in student_dict]
+        flask_list = [student_dict[x]["Flask"] for x in student_dict]
+    except Exception:
+        print("Most popular: n//a\n\
+                Least popular: n//a\n\
+                Highest activity: n//a\n\
+                Lowest activity: n//a\n\
+                Easiest course: n//a\n\
+                Hardest course: n//a\n\")
+    else:
+        if sum(python_list + dsa_list + db_list + flask_list) == 0:
+            print("Most popular: n//a\n\
+                    Least popular: n//a\n\
+                    Highest activity: n//a\n\
+                    Lowest activity: n//a\n\
+                    Easiest course: n//a\n\
+                    Hardest course: n//a\n\")
+        else:
+            popular()
+            activity()
+            easy()
 
     while True:
-        course_st = input()
-        if course_st == "back":
+        course_input = input()
+        if course_input == "back":
             break
-        elif course_st not in course_list:
-            print("Unknown course")
+        elif course_input not in course_list:
+            top_student(course_input)
         else:
-            try:
-                python_list = [student_dict[x]["python_score"] for x in student_dict]
-                dsa_list = [student_dict[x]["DSA_score"] for x in student_dict]
-                db_list = [student_dict[x]["datebase_score"] for x in student_dict]
-                flask_list = [student_dict[x]["flask_score"] for x in student_dict]
-            except Exception:
-                print("Most popular: n//a\n\
-                        Least popular: n//a\n\
-                        Highest activity: n//a\n\
-                        Lowest activity: n//a\n\
-                        Easiest course: n//a\n\
-                        Hardest course: n//a\n\")
-            else:
-                if sum(python_list + dsa_list + db_list + flask_list) == 0:
-                    print("Most popular: n//a\n\
-                            Least popular: n//a\n\
-                            Highest activity: n//a\n\
-                            Lowest activity: n//a\n\
-                            Easiest course: n//a\n\
-                            Hardest course: n//a\n\")
-                else:
-                    popular()
-                    activity()
-                    easy()
+            print("Unknown course")
 
-def popular():
+def popular() -> None:
     pop_score = list()
 
     for lst in [python_list, dsa_list, db_list, flask_list]:
@@ -208,7 +206,7 @@ def popular():
         else: print("n//a")
     return None
 
-def activity():
+def activity() -> None:
     act_score = list()
 
     for lst in [python_list, dsa_list, db_list, flask_list]:
@@ -223,7 +221,7 @@ def activity():
         else: print("n//a")
     return None
 
-def easy():
+def easy() -> None:
     easy_score = list()
 
     for lst in [python_list, dsa_list, db_list, flask_list]:
@@ -238,11 +236,20 @@ def easy():
         else: print("n//a")
     return None
 
-def top_student():
-
-
-
-    
+def top_student(course_input: str) -> None:
+    print(course_input)
+    print("id    points    completed")
+    cmplt_point = {"Python": 600, "DSA": 400, "Database": 480, "Flask": 550}
+    stdt_score = {stdt_id: student_dict[stdt_id][course_input]
+                    for stdt_id in student_dict
+                    if student_dict[stdt_id][course_input] > 0}
+    if bool(stdt_score):
+        sorted_score = dict(sorted(stdt_score.items(),
+                        key=operator.itemgetter(1), reverse=True))
+        for k in sorted_score.keys():
+            cmplt = sorted_score[k] / cmplt_point[course_input] * 100
+            print(f"{k}  {sorted_score[k]}        {round(cmplt, 1)}%")
+    return None
 
 if __name__ == '__main__':
     main()
