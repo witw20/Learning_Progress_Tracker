@@ -159,10 +159,8 @@ def find_student() -> None:
 
 def statistics() -> None:
     print("Type the name of a course to see details or 'back' to quit:")
-    course_list = ["Python", "DSA", "Databases", "Flask"]
-    # popular
-    # activity
-    # easiness
+    course_name = ["Python", "DSA", "Databases", "Flask"]
+
     while True:
         course_st = input()
         if course_st == "back":
@@ -170,8 +168,81 @@ def statistics() -> None:
         elif course_st not in course_list:
             print("Unknown course")
         else:
+            try:
+                python_list = [student_dict[x]["python_score"] for x in student_dict]
+                dsa_list = [student_dict[x]["DSA_score"] for x in student_dict]
+                db_list = [student_dict[x]["datebase_score"] for x in student_dict]
+                flask_list = [student_dict[x]["flask_score"] for x in student_dict]
+            except Exception:
+                print("Most popular: n//a\n\
+                        Least popular: n//a\n\
+                        Highest activity: n//a\n\
+                        Lowest activity: n//a\n\
+                        Easiest course: n//a\n\
+                        Hardest course: n//a\n\")
+            else:
+                if sum(python_list + dsa_list + db_list + flask_list) == 0:
+                    print("Most popular: n//a\n\
+                            Least popular: n//a\n\
+                            Highest activity: n//a\n\
+                            Lowest activity: n//a\n\
+                            Easiest course: n//a\n\
+                            Hardest course: n//a\n\")
+                else:
+                    popular()
+                    activity()
+                    easy()
+
+def popular():
+    pop_score = list()
+
+    for lst in [python_list, dsa_list, db_list, flask_list]:
+        pop_score.append(len([x for x in lst if x > 0]))
+    print("Most popular: ", end="")
+    for course in course_name:
+        print(course_name[i] if pop_score[i] == max(pop_score), sep=" ")
+    print("Least popular: ", end="")
+    for course in course_name:
+        if min(pop_score) < max(pop_score):
+            print(course_name[i] if pop_score[i] == min(pop_score), sep=" ")
+        else: print("n//a")
+    return None
+
+def activity():
+    act_score = list()
+
+    for lst in [python_list, dsa_list, db_list, flask_list]:
+        act_score.append(sum([lst]))
+    print("Highest activity: ", end="")
+    for course in course_name:
+        print(course_name[i] if act_score[i] == max(act_score), sep=" ")
+    print("Lowest activity: ", end="")
+    for course in course_name:
+        if min(act_score) < max(act_score):
+            print(course_name[i] if act_score[i] == min(act_score), sep=" ")
+        else: print("n//a")
+    return None
+
+def easy():
+    easy_score = list()
+
+    for lst in [python_list, dsa_list, db_list, flask_list]:
+        easy_score.append(sum([lst]) / len([lst]))
+    print("Easiest course: ", end="")
+    for course in course_name:
+        print(course_name[i] if easy_score[i] == max(easy_score), sep=" ")
+    print("Hardest course: ", end="")
+    for course in course_name:
+        if min(easy_score) < max(act_score):
+            print(course_name[i] if easy_score[i] == min(easy_score), sep=" ")
+        else: print("n//a")
+    return None
+
+def top_student():
 
 
+
+    
 
 if __name__ == '__main__':
     main()
