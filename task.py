@@ -8,6 +8,8 @@ def print_menu() -> None:
     student_num = 0
     student_dict = dict()
     email_set = set()
+    cmplt_point = {"Python": 600, "DSA": 400, "Database": 480, "Flask": 550}
+    course_name = ["Python", "DSA", "Databases", "Flask"]
 
     while True:
         choice = input()
@@ -36,6 +38,9 @@ def print_menu() -> None:
 
         elif choice.strip() == "statistics":
             statistics()
+
+        # elif choice.strip() == "notify":
+        #     notify()
 
         elif choice.strip() == "exit":
             print("Bye!")
@@ -156,7 +161,7 @@ def find_student() -> None:
 
 def statistics() -> None:
     print("Type the name of a course to see details or 'back' to quit:")
-    course_name = ["Python", "DSA", "Databases", "Flask"]
+
     try:
         python_list = [student_dict[x]["Python"] for x in student_dict]
         dsa_list = [student_dict[x]["DSA"] for x in student_dict]
@@ -239,7 +244,7 @@ def easy() -> None:
 def top_student(course_input: str) -> None:
     print(course_input)
     print("id    points    completed")
-    cmplt_point = {"Python": 600, "DSA": 400, "Database": 480, "Flask": 550}
+
     stdt_score = {stdt_id: student_dict[stdt_id][course_input]
                     for stdt_id in student_dict
                     if student_dict[stdt_id][course_input] > 0}
